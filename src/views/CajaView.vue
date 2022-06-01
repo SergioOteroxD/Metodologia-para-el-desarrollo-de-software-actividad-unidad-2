@@ -3,7 +3,7 @@
     <nav>
       <HeaderNavVue></HeaderNavVue>
     </nav>
-    
+
     <div><h1>Caja</h1></div>
 
     <div class="caja">

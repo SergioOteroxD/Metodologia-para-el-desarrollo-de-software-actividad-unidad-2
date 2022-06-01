@@ -1,5 +1,9 @@
 <template>
   <div>
+    <img src="./../../public/tiki (1).png" alt="" />
+  </div>
+
+  <div>
     <div>
       <form v-on:submit.prevent="auth(authUser.email, authUser.password)">
         <input
