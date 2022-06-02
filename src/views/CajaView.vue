@@ -4,7 +4,7 @@
       <HeaderNavVue></HeaderNavVue>
     </nav>
 
-    <div><h1>Caja</h1></div>
+    <div id="caja"><h1>Caja</h1></div>
 
     <div class="caja">
       <div class="product">
@@ -27,7 +27,8 @@
           <div>
             <ul>
               <li v-for="product in productsFactura" :key="product">
-                {{ product.name }} {{ product.price }}
+                {{ product.name }} ${{ product.price }} cantidad=
+                {{ product.cantidad }}
               </li>
             </ul>
           </div>
@@ -37,16 +38,17 @@
       </div>
     </div>
 
-    <div class="ordenes">
-      <h1>Ordenes</h1>
-
-      <div v-for="order in orders" :key="order.price">
+    <div id="ordenes"><h1>Ordenes</h1></div>
+    <div class="ordens">
+      <div class="orden" v-for="order in orders" :key="order">
         <div class="card">
-          <form>
-            <h1>{{ order.name }}</h1>
-            <p class="price">${{ order.price }}</p>
-            <p>{{ orders.filter((order) => order.total > 0) }}</p>
-          </form>
+          <h1>Order</h1>
+          <hr />
+          <div v-for="o in order" :key="o">
+            <h2>{{ o.name }} {{ o.price }}</h2>
+            <hr />
+            <h2>Total: {{ o.total }}</h2>
+          </div>
         </div>
       </div>
     </div>
@@ -64,7 +66,7 @@ export default {
           image: "src/assets/img/DE-TODITO-NATURAL-X-400G.png",
           price: 200,
           description: "Pequeño refrigerio que se toma entre comida",
-          cantidad: 0,
+          cantidad: 1,
         },
         {
           name: "Salchicha",
@@ -72,6 +74,7 @@ export default {
           price: 1200,
           description:
             "Las salchichas son embutidos a base de carne picada. Para la elaboración se suelen aprovechar las partes del animal, como la grasa, las vísceras o sangre.",
+          cantidad: 1,
         },
         {
           name: "Huevos",
@@ -79,7 +82,7 @@ export default {
           price: 400,
           description:
             "Huevo que ponen las aves, especialmente la gallina, y que se toma como alimento.",
-          cantidad: 0,
+          cantidad: 1,
         },
         {
           name: "Moto",
@@ -87,7 +90,7 @@ export default {
           price: 10000000,
           description:
             "Una motocicleta, comúnmente conocida en español con la abreviatura moto, es un vehículo de dos ruedas, impulsado por un motor de combustión interna a gasolina que acciona la rueda trasera",
-          cantidad: 0,
+          cantidad: 1,
         },
         {
           name: "Celular",
@@ -95,32 +98,40 @@ export default {
           price: 250000,
           description:
             "Un teléfono móvil o teléfono celular es un dispositivo portátil que puede hacer o recibir llamadas a través de una portadora de radiofrecuencia, mientras el usuario se está moviendo dentro de un área de servicio telefónico.",
-          cantidad: 0,
+          cantidad: 1,
         },
       ],
       newProduct: {},
       productsFactura: [],
-      newOrder: {},
       orders: [],
     };
   },
   methods: {
     addOrder() {
       let total = { total: this.getTotal() };
+      let date = Date.now();
+      let fecha = { fecha: date };
+      this.productsFactura.push(fecha);
       this.productsFactura.push(total);
-      this.newOrder = this.productsFactura;
-      this.orders.push(this.newOrder);
+      this.orders.push(this.productsFactura);
       this.productsFactura = [];
-      console.log(this.orders);
+      console.log();
     },
     addFactura(newProduct) {
+      if (this.productsFactura.some((factura) => factura === newProduct)) {
+        newProduct.cantidad = newProduct.cantidad + 1;
+        return;
+      }
       this.productsFactura.push(newProduct);
     },
     getTotal() {
       let suma = this.productsFactura.reduce((a, b) => {
-        return (a += b.price);
+        return (a += b.price * b.cantidad);
       }, 0);
       return suma;
+    },
+    getNameOrder() {
+      return this.orders.forEach((order) => order.name);
     },
   },
   components: {
@@ -139,11 +150,6 @@ form {
 .caja {
   display: flex;
   width: 100%;
-}
-
-.ordenes {
-  display: block;
-  background-color: aqua;
 }
 
 .factura {

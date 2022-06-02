@@ -1,7 +1,7 @@
 <template>
   <nav class="topnav">
     <a href="#home">Home</a>
-    <a class="active" href="#">Caja</a>
+    <a class="active" href="#caja">Caja</a>
     <a href="#ordenes">Ordenes</a>
     <a href="#about">Inventario</a>
   </nav>
