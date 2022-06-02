@@ -48,15 +48,27 @@
           <h1>Order</h1>
           <hr />
           <div v-for="o in order" :key="o">
-            <h2>{{ o.name }} {{ o.price }}</h2>
+            <h2 v-if="o.cantidad">
+              {{ o.name }} {{ o.price }} x{{ o.cantidad }}
+            </h2>
             <hr />
-            <h2 v-if="o.total">Total: {{ o.total }}</h2>
+            <h2 v-if="o.total">Total: ${{ o.total }}</h2>
           </div>
         </div>
       </div>
     </div>
 
-    <div id="invetario"><h1>Inventario</h1></div>
+    <div id="inventario"><h1>Inventario</h1></div>
+    <div class="ordens">
+      <div class="stock" v-for="product in products" :key="product">
+        <div class="card">
+          <h2>{{ product.name }} stock: {{ product.stock }}</h2>
+          <div v-if="product.agotado" style="background-color: red">
+            Agotando
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 </template>
 
@@ -68,19 +80,23 @@ export default {
     return {
       products: [
         {
-          name: "Mekato",
+          name: "De Todito",
           image: "src/assets/img/DE-TODITO-NATURAL-X-400G.png",
-          price: 200,
+          price: 2200,
           description: "Pequeño refrigerio que se toma entre comida",
           cantidad: 1,
+          stock: 20,
+          agotado: false,
         },
         {
-          name: "Salchicha",
-          image: "src/assets/img/kisspng-salchicha.png",
-          price: 1200,
+          name: "Salchicha Ranchera",
+          image: "src/assets/img/salchicha-ranchera.png",
+          price: 3700,
           description:
             "Las salchichas son embutidos a base de carne picada. Para la elaboración se suelen aprovechar las partes del animal, como la grasa, las vísceras o sangre.",
           cantidad: 1,
+          stock: 20,
+          agotado: false,
         },
         {
           name: "Huevos",
@@ -89,22 +105,35 @@ export default {
           description:
             "Huevo que ponen las aves, especialmente la gallina, y que se toma como alimento.",
           cantidad: 1,
+          stock: 20,
+          agotado: false,
         },
         {
-          name: "Moto",
-          image: "src/assets/img/Nkd-73-akt-motos.png",
-          price: 10000000,
-          description:
-            "Una motocicleta, comúnmente conocida en español con la abreviatura moto, es un vehículo de dos ruedas, impulsado por un motor de combustión interna a gasolina que acciona la rueda trasera",
+          name: "Arroz Diana",
+          image: "src/assets/img/arroz-diana.png",
+          price: 3800,
+          description: "",
           cantidad: 1,
+          stock: 20,
+          agotado: false,
         },
         {
-          name: "Celular",
-          image: "src/assets/img/Realme-C21Y.png",
-          price: 250000,
-          description:
-            "Un teléfono móvil o teléfono celular es un dispositivo portátil que puede hacer o recibir llamadas a través de una portadora de radiofrecuencia, mientras el usuario se está moviendo dentro de un área de servicio telefónico.",
+          name: "Arroz Roa",
+          image: "src/assets/img/Arroz-roa.png",
+          price: 4200,
+          description: "",
           cantidad: 1,
+          stock: 20,
+          agotado: false,
+        },
+        {
+          name: "Arroz Exito",
+          image: "src/assets/img/Arroz-exito.png",
+          price: 3500,
+          description: "",
+          cantidad: 1,
+          stock: 20,
+          agotado: false,
         },
       ],
       newProduct: {},
@@ -116,7 +145,6 @@ export default {
     deleteProduct(index) {
       console.log(this.productsFactura[index].cantidad);
       if (this.productsFactura[index].cantidad > 1) {
-        console.log("entro en el if");
         this.productsFactura[index].cantidad =
           this.productsFactura[index].cantidad - 1;
         console.log(this.productsFactura[index].cantidad);
@@ -127,6 +155,16 @@ export default {
     addOrder() {
       let total = { total: this.getTotal() };
       let fecha = { fecha: this.metodoGetFecha };
+      this.productsFactura.forEach((factura) => {
+        this.products.forEach((product) => {
+          if (factura == product) {
+            product.stock -= factura.cantidad;
+            if (product.stock <= 10) {
+              product.agotado = true;
+            }
+          }
+        });
+      });
       this.productsFactura.push(fecha);
       this.productsFactura.push(total);
       this.orders.push(this.productsFactura);
@@ -174,6 +212,10 @@ form {
 .caja {
   display: flex;
   width: 100%;
+}
+
+#caja {
+  padding-top: 60px;
 }
 
 .factura {
