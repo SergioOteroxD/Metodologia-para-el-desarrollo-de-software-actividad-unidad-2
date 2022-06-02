@@ -1,9 +1,42 @@
-<template>
-  <div>
-    <img src="./../../public/tiki (1).png" alt="" />
-  </div>
+<style scoped>
+input {
+  display: block;
+  margin-bottom: 10%;
+}
+.tdo {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 150px;
+  width: fit-content;
+  height: fit-content;
+}
+form {
+  margin: auto;
+  width: fit-content;
+}
 
-  <div>
+button {
+  margin-left: 15px;
+  border: none;
+  outline: 0;
+  padding: 10px;
+  color: white;
+  background-color: #fa8807;
+  text-align: center;
+  cursor: pointer;
+  width: 80%;
+  font-size: 20px;
+}
+button:hover {
+  opacity: 0.7;
+}
+</style>
+<template>
+  <div class="tdo">
+    <div style="margin-bottom: 10px;">
+      <img style="width: 200px" src="./../../public/tiki (1).png" alt="" />
+    </div>
+
     <div>
       <form v-on:submit.prevent="auth(authUser.email, authUser.password)">
         <input
