@@ -64,7 +64,7 @@ export default {
         password: "",
       },
       user: {
-        email: "cahrry@gmail.com",
+        email: "charry@gmail.com",
         password: "123456",
       },
     };

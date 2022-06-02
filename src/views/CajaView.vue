@@ -15,25 +15,28 @@
               <h1>{{ product.name }}</h1>
               <p class="price">${{ product.price }}</p>
               <p>{{ product.description }}</p>
-              <p><button type="submit">Add to Cart</button></p>
+              <p><button class="boton" type="submit">Add to Cart</button></p>
             </form>
           </div>
         </div>
       </div>
 
       <div class="factura">
-        <form v-on:submit.prevent="addOrder">
+        <form>
           <h1>Factura</h1>
           <div>
             <ul>
-              <li v-for="product in productsFactura" :key="product">
+              <li v-for="(product, index) in productsFactura" :key="product">
                 {{ product.name }} ${{ product.price }} cantidad=
                 {{ product.cantidad }}
+                <button v-on:click.prevent="deleteProduct(index)">x</button>
               </li>
             </ul>
           </div>
           <h2>Total= {{ getTotal() }}</h2>
-          <p><button type="submit">Hecho</button></p>
+          <p>
+            <button class="boton" v-on:click.prevent="addOrder()">Hecho</button>
+          </p>
         </form>
       </div>
     </div>
@@ -47,16 +50,19 @@
           <div v-for="o in order" :key="o">
             <h2>{{ o.name }} {{ o.price }}</h2>
             <hr />
-            <h2>Total: {{ o.total }}</h2>
+            <h2 v-if="o.total">Total: {{ o.total }}</h2>
           </div>
         </div>
       </div>
     </div>
+
+    <div id="invetario"><h1>Inventario</h1></div>
   </main>
 </template>
 
 <script>
 import HeaderNavVue from "../components/HeaderNav.vue";
+import moment from "moment";
 export default {
   data() {
     return {
@@ -107,15 +113,25 @@ export default {
     };
   },
   methods: {
+    deleteProduct(index) {
+      console.log(this.productsFactura[index].cantidad);
+      if (this.productsFactura[index].cantidad > 1) {
+        console.log("entro en el if");
+        this.productsFactura[index].cantidad =
+          this.productsFactura[index].cantidad - 1;
+        console.log(this.productsFactura[index].cantidad);
+      } else {
+        this.productsFactura.splice(index, 1);
+      }
+    },
     addOrder() {
       let total = { total: this.getTotal() };
-      let date = Date.now();
-      let fecha = { fecha: date };
+      let fecha = { fecha: this.metodoGetFecha };
       this.productsFactura.push(fecha);
       this.productsFactura.push(total);
       this.orders.push(this.productsFactura);
       this.productsFactura = [];
-      console.log();
+      console.log(this.orders);
     },
     addFactura(newProduct) {
       if (this.productsFactura.some((factura) => factura === newProduct)) {
@@ -123,6 +139,14 @@ export default {
         return;
       }
       this.productsFactura.push(newProduct);
+    },
+    metodoGetFecha() {
+      const date = moment();
+      return date;
+    },
+    getFecha(number) {
+      let fecha = moment(number).calendar();
+      return fecha;
     },
     getTotal() {
       let suma = this.productsFactura.reduce((a, b) => {
@@ -166,6 +190,11 @@ form {
   color: #000;
 }
 
+.ordens {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
 .product {
   float: left;
   display: grid;
@@ -187,7 +216,7 @@ form {
   font-size: 22px;
 }
 
-button {
+.boton {
   border: none;
   outline: 0;
   padding: 12px;
@@ -203,7 +232,8 @@ button:hover {
   opacity: 0.7;
 }
 nav {
-  position: sticky;
+  position: fixed;
   top: 0%;
+  z-index: 1000;
 }
 </style>

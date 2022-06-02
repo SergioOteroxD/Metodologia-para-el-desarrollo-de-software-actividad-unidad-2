@@ -1,9 +1,9 @@
 <template>
   <nav class="topnav">
-    <a href="#home">Home</a>
+    <a href="/">Home</a>
     <a class="active" href="#caja">Caja</a>
     <a href="#ordenes">Ordenes</a>
-    <a href="#about">Inventario</a>
+    <a href="#inventario">Inventario</a>
   </nav>
 </template>
 
